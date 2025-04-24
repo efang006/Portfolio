@@ -21,11 +21,27 @@ export function generateSudoku(difficulty = 'easy') {}
 // Checks if the generated board has only one valid solution
 export function hasUniqueSolution(board) {}
 
-// Selects a random order of numbers for board shuffling
-export function getRandomizedNumbers() {}
+export function cloneBoard(board) {
+  return board.map(row => [...row]);
+}
 
-// Creates a deep copy of the Sudoku board
-export function cloneBoard(board) {}
+export function getRandomizedNumbers() {
+  const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  for (let i = nums.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [nums[i], nums[j]] = [nums[j], nums[i]];
+  }
+  return nums;
+}
 
-// Returns an array of [row, col] positions for filled cells
-export function getFilledCells(board) {}
+export function getFilledCells(board) {
+  const positions = [];
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      if (board[row][col] !== null) {
+        positions.push([row, col]);
+      }
+    }
+  }
+  return positions;
+}
