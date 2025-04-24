@@ -15,9 +15,6 @@ export function generateSudoku() {
 // Generates a full, valid Sudoku solution board
 export function generateCompleteBoard() {}
 
-// Removes numbers from a complete board to create a puzzle of a given difficulty
-export function generateSudoku(difficulty = 'easy') {}
-
 // Checks if the generated board has only one valid solution
 export function hasUniqueSolution(board) {}
 
