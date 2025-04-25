@@ -1,27 +1,119 @@
-export function generateSudoku() {
-  return [
-    [5, 3, null, null, 7, null, null, null, null],
-    [6, null, null, 1, 9, 5, null, null, null],
-    [null, 9, 8, null, null, null, null, 6, null],
-    [8, null, null, null, 6, null, null, null, 3],
-    [4, null, null, 8, null, 3, null, null, 1],
-    [7, null, null, null, 2, null, null, null, 6],
-    [null, 6, null, null, null, null, 2, 8, null],
-    [null, null, null, 4, 1, 9, null, null, 5],
-    [null, null, null, null, 8, null, null, 7, 9],
-  ].map(row =>
-    row.map(value => ({
-      value,
-      isFixed: value !== null
-    }))
-  );
+export function generateSudoku(difficulty = "medium") {
+  const fullBoard = generateCompleteBoard();
+  const board = cloneBoard(fullBoard);
+
+  const getHoleCountForDifficulty = (level) => {
+    if (level === "easy") return 30;
+    if (level === "medium") return 40;
+    if (level === "hard") return 50;
+    return 40;
+  };
+
+  let holesToDig = getHoleCountForDifficulty(difficulty);
+  const filledCells = getFilledCells(board);
+
+  let attempts = 0;
+  const maxAttempts = holesToDig * 5;
+
+  while (holesToDig > 0 && attempts < maxAttempts) {
+    const index = Math.floor(Math.random() * filledCells.length);
+    const [row, col] = filledCells[index];
+    const temp = board[row][col];
+    board[row][col] = { value: null, isFixed: false };
+
+    if (!hasUniqueSolution(board)) {
+      board[row][col] = temp; // undo
+    } else {
+      filledCells.splice(index, 1); // remove from filled list
+      holesToDig--;
+    }
+
+    attempts++;
+  }
+
+  return board;
 }
   
 // generateCompleteBoard()
 // Used In: New Game
 // Purpose: Build full valid grid
 // User Interaction: Starts puzzle setup
-export function generateCompleteBoard() {}
+export function generateCompleteBoard() {
+  const board = Array.from({ length: 9 }, () =>
+    Array.from({ length: 9 }, () => ({ value: null, isFixed: false }))
+  );
+
+  function fillBoard(board) {
+    const empty = findEmptyCell(board);
+    if (!empty) return true;
+
+    const [row, col] = empty;
+    for (const num of getRandomizedNumbers()) {
+      if (isValid(board, row, col, num)) {
+        board[row][col] = { value: num, isFixed: true };
+        if (fillBoard(board)) return true;
+        board[row][col] = { value: null, isFixed: false }; // backtrack
+      }
+    }
+
+    return false;
+  }
+
+  if (fillBoard(board)) {
+    return board;
+  } else {
+    throw new Error("Failed to generate a complete Sudoku board.");
+  }
+}
+
+// findEmptyCell()
+// Used In: Solver/Generator
+// Purpose: Next cell logic
+// User Interaction: Part of recursion engine
+export function findEmptyCell(board) {
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      if (board[row][col]?.value === null) {
+        return [row, col];
+      }
+    }
+  }
+  return null; // No empty cells
+}
+
+// isValid()
+// Used In: Every cell input
+// Purpose: Enforce Sudoku rules
+// User Interaction: Validate user moves
+export function isValid(board, row, col, num) {
+  // Check row
+  for (let i = 0; i < 9; i++) {
+    if (i !== col && board[row][i]?.value === num) {
+      return false;
+    }
+  }
+
+  // Check column
+  for (let i = 0; i < 9; i++) {
+    if (i !== row && board[i][col]?.value === num) {
+      return false;
+    }
+  }
+
+  // Check 3x3 box
+  const startRow = Math.floor(row / 3) * 3;
+  const startCol = Math.floor(col / 3) * 3;
+
+  for (let r = startRow; r < startRow + 3; r++) {
+    for (let c = startCol; c < startCol + 3; c++) {
+      if ((r !== row || c !== col) && board[r][c]?.value === num) {
+        return false;
+      }
+    }
+  }
+
+  return true; // Safe to place
+}
 
 // hasUniqueSolution()
 // Used In: Generator
