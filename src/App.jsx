@@ -9,14 +9,20 @@ const screens = {
 
 function App() {
   const [screen, setScreen] = useState(screens.MENU);
+  const [difficulty, setDifficulty] = useState('medium');
+
+  function handleStartGame(selectedDifficulty) {
+    setDifficulty(selectedDifficulty);
+    setScreen(screens.GAME);
+  }
 
   return (
     <div>
       {screen === screens.MENU && (
-        <MainMenu onStart={() => setScreen(screens.GAME)} />
+        <MainMenu onStart={handleStartGame} />
       )}
       {screen === screens.GAME && (
-        <SudokuBoard onBack={() => setScreen(screens.MENU)} />
+        <SudokuBoard difficulty={difficulty} onBack={() => setScreen(screens.MENU)} />
       )}
     </div>
   );

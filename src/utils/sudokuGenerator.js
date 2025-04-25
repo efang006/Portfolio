@@ -3,9 +3,9 @@ export function generateSudoku(difficulty = "medium") {
   const board = cloneBoard(fullBoard);
 
   const getHoleCountForDifficulty = (level) => {
-    if (level === "easy") return 30;
-    if (level === "medium") return 40;
-    if (level === "hard") return 50;
+    if (level === "easy") return 36;
+    if (level === "medium") return 45;
+    if (level === "hard") return 63;
     return 40;
   };
 

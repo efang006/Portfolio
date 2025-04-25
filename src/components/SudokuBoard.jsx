@@ -2,17 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Cell from './Cell';
 import { generateSudoku } from '../utils/sudokuGenerator';
 
-function SudokuBoard({ onBack }) {
+function SudokuBoard({ difficulty, onBack }) {
   const [board, setBoard] = useState(Array(9).fill().map(() => Array(9).fill({ value: null, isFixed: false })));
 
   useEffect(() => {
-    const generated = generateSudoku('easy');
-    if (generated && Array.isArray(generated) && generated.length === 9) {
-      setBoard(generated);
-    } else {
-      console.error("generateSudoku did not return a valid 9x9 board.");
-    }
-  }, []);
+    const generated = generateSudoku(difficulty);
+    setBoard(generated);
+  }, [difficulty]);
 
   const updateCell = (row, col, newValue) => {
     setBoard(prevBoard =>
