@@ -17,16 +17,53 @@ export function generateSudoku() {
   );
 }
   
-// Generates a full, valid Sudoku solution board
+// generateCompleteBoard()
+// Used In: New Game
+// Purpose: Build full valid grid
+// User Interaction: Starts puzzle setup
 export function generateCompleteBoard() {}
 
-// Checks if the generated board has only one valid solution
-export function hasUniqueSolution(board) {}
+// hasUniqueSolution()
+// Used In: Generator
+// Purpose: Verify uniqueness
+// User Interaction: Ensures fair puzzles
+export function hasUniqueSolution(board) {
+  let count = 0;
+  const cloned = cloneBoard(board);
 
-export function cloneBoard(board) {
-  return board.map(row => [...row]);
+  function countSolutions(b) {
+    const cell = findEmptyCell(b);
+    if (!cell) {
+      count++;
+      return count > 1;  // early exit
+    }
+    const [row, col] = cell;
+    for (let num = 1; num <= 9; num++) {
+      if (isValid(b, row, col, num)) {
+        b[row][col] = { value: num, isFixed: false };
+        if (countSolutions(b)) return true;
+        b[row][col] = { value: null, isFixed: false };
+      }
+    }
+    return false;
+  }
+
+  countSolutions(cloned);
+  return count === 1;
 }
 
+// cloneBoard()
+// Used In: Solve, Validate
+// Purpose: Preserve board state
+// User Interaction: Avoid UI mutation
+export function cloneBoard(board) {
+  return board.map(row => row.map(cell => cell ? { ...cell } : null));
+}
+
+// getRandomizedNumbers()
+// Used In: Generator/Solver
+// Purpose: Introduce randomness
+// User Interaction: Makes puzzles unique
 export function getRandomizedNumbers() {
   const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   for (let i = nums.length - 1; i > 0; i--) {
@@ -36,11 +73,15 @@ export function getRandomizedNumbers() {
   return nums;
 }
 
+// getFilledCells()
+// Used In: Difficulty setting
+// Purpose: Count filled cells
+// User Interaction: Adjust/remove values
 export function getFilledCells(board) {
   const positions = [];
   for (let row = 0; row < 9; row++) {
     for (let col = 0; col < 9; col++) {
-      if (board[row][col] !== null) {
+      if (board[row][col]?.value !== null) {
         positions.push([row, col]);
       }
     }
