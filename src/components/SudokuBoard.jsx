@@ -20,26 +20,45 @@ function SudokuBoard({ difficulty, onBack, initialBoard }) {
   // Optimized board validation with early return
   const validateBoard = useCallback((board) => {
     const errors = new Set();
-    const rows = Array(9).fill().map(() => new Set());
-    const cols = Array(9).fill().map(() => new Set());
-    const boxes = Array(9).fill().map(() => new Set());
+    const rows = Array(9).fill().map(() => ({}));
+    const cols = Array(9).fill().map(() => ({}));
+    const boxes = Array(9).fill().map(() => ({}));
 
+    // First pass: store positions of all values
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {
         const value = board[r][c]?.value;
         if (value !== null) {
           const boxIndex = Math.floor(r / 3) * 3 + Math.floor(c / 3);
           
-          if (rows[r].has(value) || cols[c].has(value) || boxes[boxIndex].has(value)) {
+          // Store position for each value in row
+          if (rows[r][value]) {
             errors.add(`${r}-${c}`);
+            errors.add(`${r}-${rows[r][value]}`);
+          } else {
+            rows[r][value] = c;
           }
-          
-          rows[r].add(value);
-          cols[c].add(value);
-          boxes[boxIndex].add(value);
+
+          // Store position for each value in column
+          if (cols[c][value]) {
+            errors.add(`${r}-${c}`);
+            errors.add(`${cols[c][value]}-${c}`);
+          } else {
+            cols[c][value] = r;
+          }
+
+          // Store position for each value in box
+          if (boxes[boxIndex][value]) {
+            const [prevRow, prevCol] = boxes[boxIndex][value];
+            errors.add(`${r}-${c}`);
+            errors.add(`${prevRow}-${prevCol}`);
+          } else {
+            boxes[boxIndex][value] = [r, c];
+          }
         }
       }
     }
+
     return errors;
   }, []);
 

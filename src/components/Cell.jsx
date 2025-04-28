@@ -24,7 +24,7 @@ const Cell = memo(function Cell({ value, isFixed, row, col, onChange, isInvalid 
       disabled={isFixed}
       maxLength={1}
       className={`w-12 h-12 text-center border border-black text-lg font-semibold ${borderClasses} ${
-        isFixed ? 'bg-gray-300' : isInvalid ? 'bg-red-300' : 'bg-white'
+        isInvalid ? 'bg-red-300' : 'bg-white'
       }`}
     />
   );

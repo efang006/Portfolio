@@ -23,7 +23,7 @@ function MainMenu({ onStart, onLoadGame }) {
         variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
         className="text-4xl font-bold mb-6"
       >
-        Welcome to Sudoku
+        Sudoku
       </motion.h1>
 
       {/* New Game Button */}
