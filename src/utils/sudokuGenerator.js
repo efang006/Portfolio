@@ -1,7 +1,7 @@
 export function generateSudoku(difficulty) {
   // Difficulty settings
   const difficulties = {
-    easy: { min: 35, max: 45 },
+    easy: { min: 1, max: 2 }, // 35 - 45
     medium: { min: 44, max: 54 },
     hard: { min: 53, max: 63 }
   };

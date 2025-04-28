@@ -1,48 +1,23 @@
-import React, { useState } from 'react';
-import MainMenu from './components/MainMenu';
-import SudokuBoard from './components/SudokuBoard';
-
-const screens = {
-  MENU: 'menu',
-  GAME: 'game',
-};
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout/Layout';
+import Home from './pages/Home';
+import Projects from './pages/Projects';
+import SudokuGame from './pages/SudokuGame';
+import Resume from './pages/Resume';
 
 function App() {
-  const [screen, setScreen] = useState(screens.MENU);
-  const [difficulty, setDifficulty] = useState('medium');
-  const [savedGame, setSavedGame] = useState(null);
-
-  function handleLoadGame() {
-    const savedGame = JSON.parse(localStorage.getItem('savedGame'));
-    if (savedGame) {
-      setSavedGame(savedGame);
-      setScreen(screens.GAME);
-    } else {
-      alert('No saved game found!');
-    }
-  }
-
   return (
-    <div>
-      {screen === screens.MENU && (
-        <MainMenu
-          onStart={(selectedDifficulty) => {
-            setDifficulty(selectedDifficulty);
-            setSavedGame(null); // Start a fresh game
-            setScreen(screens.GAME);
-          }}
-          onLoadGame={handleLoadGame}
-        />
-      )}
-      {screen === screens.GAME && (
-        <SudokuBoard
-          difficulty={savedGame?.difficulty || difficulty}
-          initialBoard={savedGame?.board || null}
-          initialTimer={savedGame?.timer || 0}
-          onBack={() => setScreen(screens.MENU)}
-        />
-      )}
-    </div>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/sudoku" element={<SudokuGame />} />
+          <Route path="/resume" element={<Resume />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }
 

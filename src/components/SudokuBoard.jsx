@@ -78,7 +78,7 @@ function SudokuBoard({ difficulty, onBack, initialBoard }) {
     <div className="flex flex-col items-center mt-10">
       {gameWon && (
         <div className="mb-4 p-4 bg-green-500 text-white font-bold rounded">
-          🎉 Congratulations! You solved the puzzle!
+          Congratulations! You solved the puzzle!
         </div>
       )}
       <div className="mb-4">
@@ -100,7 +100,7 @@ function SudokuBoard({ difficulty, onBack, initialBoard }) {
           Exit Game
         </button>
       </div>
-      <div className="grid grid-cols-9 w-max border border-black">
+      <div className="grid grid-cols-9 w-max border border-black ">
         {board.map((row, rowIdx) =>
           row.map((cell, colIdx) => (
             <Cell
