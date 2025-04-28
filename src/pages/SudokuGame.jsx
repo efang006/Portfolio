@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MainMenu from '../components/MainMenu';
-import SudokuBoard from '../components/SudokuBoard';
+import MainMenu from '../features/sudoku/components/MainMenu';
+import SudokuBoard from '../features/sudoku/components/SudokuBoard';
 
 function SudokuGame() {
   const [screen, setScreen] = useState('menu');
