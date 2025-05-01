@@ -21,9 +21,6 @@ function Navbar() {
             <Link to="/contact" className="px-3 py-2 rounded-md hover:bg-gray-700">
               About Me
             </Link>
-            <Link to="/resume" className="px-3 py-2 rounded-md hover:bg-gray-700">
-              Resume
-            </Link>
           </div>
         </div>
       </div>
